@@ -41,7 +41,7 @@ function App() {
         </Typography>
         <Box sx={{ marginBottom: theme.spacing(2) }}>
           <Typography variant="body1">
-            Last test result: 
+            Last test result: {JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.result || 'No results yet'}
           </Typography>
           <Button variant="contained" size="small" color="primary" sx={{ marginTop: theme.spacing(1) }} onClick={() => setView('test')}>
             Endurance Test

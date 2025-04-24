@@ -39,3 +39,12 @@ If the day/week has been completed, display a check mark
 After clicking the correct day, show a table with the sets, and all columns but the one to follow based on test results will have a colored border
 The first row is highlighted, a button that says "start rest" which will start a timer, when the timer is over the start turns to "rest longer" which will start the timer again, and a button appears below that says "next set", the previous row will become grey and the next row is highlighted
 After the last row, show a button that says "Complete day"# 100pushups
+
+
+To Do:
+- add completion toggles for each day/week
+- Maybe have a highlight animation when timer is over
+- Highlight each row depending on current set
+- Maybe add in a filter to only show the table based on current result?
+- Some indication after weeks 2, 4, and 5 to redo the endurance test (don't allow continue until its done)
+- Something that keeps track of what day or week you are on? (last completed?)
