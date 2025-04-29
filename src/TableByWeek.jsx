@@ -1,6 +1,7 @@
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { weeks } from './reps';
 import { useEffect, useState } from "react";
+import { DaySelector } from "./components/DaySelector";
 
 export default function TableByWeek({ week }) {
   const [day, setDay] = useState('day1');
@@ -8,6 +9,11 @@ export default function TableByWeek({ week }) {
   const [currentSet, setCurrentSet] = useState(0);
   const dataByWeek = weeks[week];
   const sets = Object.keys(dataByWeek[day].level1).filter(key => key !== "name");
+  const [completedDays, setCompletedDays] = useState(() => JSON.parse(localStorage.getItem('completed')) || []);
+
+  const isDayCompleted = (week, day) => {
+    return completedDays.some((item) => item.week === week && item.day === day);
+  };
 
   const startTimer = (restTime) => {
     setCountdown(restTime);
@@ -26,30 +32,26 @@ export default function TableByWeek({ week }) {
   useEffect(() => {
   }, [currentSet]);
 
-  const handleComplete = () => {
+  const updateCompletedDays = (week, day) => {
     const lastCompleted = JSON.parse(localStorage.getItem('completed')) || [];
     const newCompleted = {
       week: week,
       day: day,
-      date: new Date().toLocaleDateString()
+      date: new Date().toLocaleDateString(),
     };
     const updatedCompleted = [...lastCompleted, newCompleted];
     localStorage.setItem('completed', JSON.stringify(updatedCompleted));
+    setCompletedDays(updatedCompleted);
+  };
+  
+  const handleComplete = () => {
+    updateCompletedDays(week, day);
     setCurrentSet(null);
-  }
-
-  const isDayCompleted = (week, day) => {
-    const completed = JSON.parse(localStorage.getItem('completed')) || [];
-    return completed.some(item => item.week === week && item.day === day);
-  }
+  };
 
   return (
     <>
-      <div>
-        <Button color={isDayCompleted(week, day) ? 'success' : day === 'day1' ? 'secondary' : 'primary'} onClick={() => setDay('day1')}> Day 1 </Button>
-        <Button color={isDayCompleted(week, day) ? 'success' : day === 'day2' ? 'secondary' : 'primary'} onClick={() => setDay('day2')}> Day 2 </Button>
-        <Button color={isDayCompleted(week, day) ? 'success' : day === 'day3' ? 'secondary' : 'primary'} onClick={() => setDay('day3')}> Day 3 </Button>
-      </div>
+      <DaySelector week={week} day={day} setDay={setDay} isDayCompleted={isDayCompleted} />
       <TableContainer component={Paper}>
         <Table size="small">
           <TableHead>
@@ -81,20 +83,22 @@ export default function TableByWeek({ week }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography color="primary">
-        Rest time: { countdown !== null ? countdown : dataByWeek[day].rest} seconds
-      </Typography>
-      {isDayCompleted(week, day) ? 
-        <Typography color="success.main">Day completed!</Typography> : 
-        <div>
-          <Button variant="contained" color="secondary" onClick={() => startTimer(dataByWeek[day].rest)} disabled={countdown !== null}>
-          {countdown ? 'Resting... ' : 'Start Rest'}
-          </Button>
-          <Button variant="contained" color="success" onClick={() => handleComplete()} disabled={isDayCompleted(week, day)}>
-            Complete Day
-          </Button>
-        </div>
-      }
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+        <Typography color="primary">
+          Rest time: { countdown !== null ? countdown : dataByWeek[day].rest} seconds
+        </Typography>
+        {isDayCompleted(week, day) ? 
+          <Typography color="success">Day completed!</Typography> : 
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+            <Button variant="contained" color="secondary" onClick={() => startTimer(dataByWeek[day].rest)} disabled={countdown !== null}>
+              {countdown ? 'Resting... ' : 'Start Rest'}
+            </Button>
+            <Button variant="contained" color="success" onClick={() => handleComplete()} disabled={isDayCompleted(week, day)}>
+              Complete Day
+            </Button>
+          </div>
+        }
+      </div>
     </>
   );
 }
