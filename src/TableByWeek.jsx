@@ -32,6 +32,18 @@ export default function TableByWeek({ week }) {
   useEffect(() => {
   }, [currentSet]);
 
+  const isLastWeekAndDayCompleted = (week, day) => {
+    if (week === 'week1' && day === 'day1') return true;
+    const lastCompleted = completedDays[completedDays.length - 1];
+    if (lastCompleted) {
+      const lastWeek = lastCompleted.week;
+      const lastDay = lastCompleted.day;
+      if (lastWeek === week && lastDay === `day${parseInt(day.slice(-1)) - 1}`) return true;
+      if (lastWeek === `week${parseInt(week.slice(-1)) - 1}` && lastDay === 'day3') return true;
+    }
+    return false;
+  }
+
   const updateCompletedDays = (week, day) => {
     const lastCompleted = JSON.parse(localStorage.getItem('completed')) || [];
     const newCompleted = {
@@ -93,7 +105,7 @@ export default function TableByWeek({ week }) {
             <Button variant="contained" color="secondary" onClick={() => startTimer(dataByWeek[day].rest)} disabled={countdown !== null}>
               {countdown ? 'Resting... ' : 'Start Rest'}
             </Button>
-            <Button variant="contained" color="success" onClick={() => handleComplete()} disabled={isDayCompleted(week, day)}>
+            <Button variant="contained" color="success" onClick={() => handleComplete()} disabled={!isLastWeekAndDayCompleted(week, day)}>
               Complete Day
             </Button>
           </div>

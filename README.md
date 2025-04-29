@@ -52,3 +52,4 @@ To Do:
 - ~~Something that keeps track of what day or week you are on? (last completed?)~~
 - ~~Reset button to reset all saved data (w/ confirm alert)~~
 - Add text / functionality to reset previous week (and suggest it depending on test results/previous week)
+- Add footer w/ link to original website
