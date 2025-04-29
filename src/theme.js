@@ -9,6 +9,7 @@ const theme = createTheme({
     },
     primary: {
       main: '#bfa14c', // Gold
+      highlight: '#bfa14c22', // Light gold highlight
     },
     secondary: {
       main: '#4a90e2', // Blue

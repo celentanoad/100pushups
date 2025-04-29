@@ -25,6 +25,7 @@ General Structure:
 - Week 4
 - Redo initial test
 - If total is <31 then go back to week 4
+- Week 5
 - Redo initial test
 - If total is > 45, move on to week 6
 - Week 6
@@ -42,9 +43,12 @@ After the last row, show a button that says "Complete day"# 100pushups
 
 
 To Do:
-- add completion toggles for each day/week
+- ~~add completion toggles for each day/week~~
+- ~~Highlight each row depending on current set~~
 - Maybe have a highlight animation when timer is over
-- Highlight each row depending on current set
 - Maybe add in a filter to only show the table based on current result?
-- Some indication after weeks 2, 4, and 5 to redo the endurance test (don't allow continue until its done)
-- Something that keeps track of what day or week you are on? (last completed?)
+- ~~Some indication after weeks 2, 4, and 5 to redo the endurance test~~
+  - (don't allow continue until its done)
+- ~~Something that keeps track of what day or week you are on? (last completed?)~~
+- ~~Reset button to reset all saved data (w/ confirm alert)~~
+- Add text / functionality to reset previous week (and suggest it depending on test results/previous week)
