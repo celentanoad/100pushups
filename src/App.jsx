@@ -152,8 +152,7 @@ function App() {
     </Box>
     <Box
       sx={{
-        position: 'fixed',
-        bottom: theme.spacing(2),
+        position: 'relative',
         left: theme.spacing(2),
         width: 'calc(100% - 32px)',
         textAlign: 'center'
