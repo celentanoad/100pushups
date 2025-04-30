@@ -80,7 +80,7 @@ export const EnduranceTest = () => {
         }}
       >
         <TextField placeholder="Total pushups done" variant="outlined" error={error} value={result || ""} onChange={handleChange}/>
-        <Tooltip title="Do as many pushups as you can and record your result">
+        <Tooltip title="Do as many pushups as you can and record your result" enterTouchDelay={0} disableTouchListener={false}>
           <QuestionMarkIcon />
         </Tooltip>
       </Box>

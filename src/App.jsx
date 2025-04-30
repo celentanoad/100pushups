@@ -152,13 +152,15 @@ function App() {
     </Box>
     <Box
       sx={{
-        position: 'absolute',
+        position: 'fixed',
         bottom: theme.spacing(2),
         left: theme.spacing(2),
+        width: 'calc(100% - 32px)',
+        textAlign: 'center'
       }}
     >
       <Typography variant="body2" color="text.secondary">
-        Visit <Link src="https://hundredpushups.com/">https://hundredpushups.com/</Link> for more info - all charts and data are from there.
+        Visit <Link href="https://hundredpushups.com/">https://hundredpushups.com/</Link> for more info - all charts and data are from there.
       </Typography>
     </Box>
     </>
