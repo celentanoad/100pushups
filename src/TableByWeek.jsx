@@ -1,4 +1,4 @@
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { weeks } from './reps';
 import { useEffect, useState } from "react";
 import { DaySelector } from "./components/DaySelector";
@@ -61,8 +61,40 @@ export default function TableByWeek({ week }) {
     setCurrentSet(null);
   };
 
+  const resetWeek = () => {
+    const remainingCompleted = completedDays.filter((item) => item.week !== week);
+    if (confirm(`Are you sure you want to reset all progress for ${week}? (Action cannot be undone)`)) {
+      localStorage.setItem('completed', JSON.stringify(remainingCompleted));
+      setCompletedDays(remainingCompleted);
+    }
+  };
+
   return (
-    <>
+    <Box
+      sx={{
+        position: 'relative',
+        padding: '1rem',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        marginTop: '1rem',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end'
+        }}
+      >
+        <Button
+          variant="outlined"
+          color="error"
+          size="small"
+          onClick={resetWeek}
+        >
+          Reset Week
+        </Button>
+      </Box>
       <DaySelector week={week} day={day} setDay={setDay} isDayCompleted={isDayCompleted} />
       <TableContainer component={Paper}>
         <Table size="small">
@@ -111,6 +143,6 @@ export default function TableByWeek({ week }) {
           </div>
         }
       </div>
-    </>
+    </Box>
   );
 }

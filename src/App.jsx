@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography, Box, Link } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import TableByWeek from './TableByWeek';
 import { EnduranceTest } from './EnduranceTest';
@@ -100,7 +100,11 @@ function App() {
           <Typography variant="body1">
             Last test result: {JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.result || 'No results yet'}
           </Typography>
-          { ['week2', 'week4', 'week5'].includes(completed?.[completed.length - 1]?.week) && completed?.[completed.length - 1]?.day === 'day3' &&
+          { 
+            ['week2', 'week4', 'week5'].includes(completed?.[completed.length - 1]?.week) && 
+            completed?.[completed.length - 1]?.day === 'day3' &&
+            completed?.[completed.length - 1]?.date >= JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.date
+            &&
             <Typography variant="body1">
               Time to retake the endurance test!
             </Typography>
@@ -147,6 +151,17 @@ function App() {
           </>
          ) 
       }
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: theme.spacing(2),
+          left: theme.spacing(2),
+        }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            Visit <Link src="https://hundredpushups.com/">https://hundredpushups.com/</Link> for more info - all charts and data are from there.
+          </Typography>
+        </Box>
     </Box>
   );
 }

@@ -1,26 +1,53 @@
-import { Box, TextField, Typography, Button, List, ListItem, ListItemText } from "@mui/material"
-import { useState } from "react";
+import { Box, TextField, Typography, Button, List, ListItem, ListItemText, Tooltip } from "@mui/material"
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import { LineChart } from "@mui/x-charts";
+import { useEffect, useState } from "react";
 
 export const EnduranceTest = () => {
   const [view, setView] = useState('update');
   const [result, setResult] = useState(null);
+  const [results, setResults] = useState(() => JSON.parse(localStorage.getItem('results')) || []);
   const [error, setError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [displayGraph, setDisplayGraph] = useState(false);
+
+  useEffect(() => {
+  },[results]);
+
+  const suggestRetakeWeek = (result) => {
+    const lastCompleted = JSON.parse(localStorage.getItem('completed')) || [];
+    const lastWeek = lastCompleted[lastCompleted.length - 1]?.week;
+    if (!result) return false;
+    switch (lastWeek) {
+      case 'week2':
+        if (result < 16) return true;
+        break;
+      case 'week4':
+        if (result < 31) return true;
+        break;
+      case 'week5':
+        if (result < 46) return true;
+        break;
+      default:
+        return false;
+    }
+  }
 
   const handleChange = (event) => {
     const value = event.target.value;
     setError(isNaN(value));
     setResult(value);
   }
+
   const handleSubmit = () => {
     if (result && !error) {
-      const storedResults = JSON.parse(localStorage.getItem('results')) || [];
       const newResult = {
         date: new Date().toLocaleDateString(),
-        result: result
+        result: Number(result)
       };
-      const updatedResults = [...storedResults, newResult];
+      const updatedResults = [...results, newResult];
       localStorage.setItem('results', JSON.stringify(updatedResults));
+      setResults(updatedResults);
       setResult(null);
       setSubmitSuccess(true);
       setTimeout(() => {
@@ -28,6 +55,7 @@ export const EnduranceTest = () => {
       }, 2000);
     }
   }
+
   return (
     <Box
       sx={{
@@ -45,7 +73,17 @@ export const EnduranceTest = () => {
       <Typography variant="h6" gutterBottom>
         Update test results
       </Typography>
-      <TextField placeholder="Total pushups done" variant="outlined" error={error} value={result || ""} onChange={handleChange}/>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center'
+        }}
+      >
+        <TextField placeholder="Total pushups done" variant="outlined" error={error} value={result || ""} onChange={handleChange}/>
+        <Tooltip title="Do as many pushups as you can and record your result">
+          <QuestionMarkIcon />
+        </Tooltip>
+      </Box>
       <Button onClick={handleSubmit} disabled={submitSuccess}>
         Save Result
       </Button>
@@ -54,22 +92,59 @@ export const EnduranceTest = () => {
           Result saved successfully!
         </Typography>
       )}
-      <Button onClick={() => setView('history')}>
-        View Previous Results
+      {suggestRetakeWeek(results[results.length-1]?.result) && (
+        <Typography variant="body1" color="error.main">
+          Based on your latest results, redo the previous week or retake the test.
+        </Typography>
+      )}
+      <Button onClick={() => setView(view === 'history' ? 'update' : 'history')}>
+        {view === 'history' ? 'Hide Previous Results' : 'Show Previous Results'}
       </Button>
       {view === 'history' && (
         <Box>
           <Typography variant="h6">Previous Results</Typography>
-          <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
-            {JSON.parse(localStorage.getItem('results')).map((result, index) => (
-              <ListItem key={index} divider>
-                <ListItemText
-                  primary={`${result.result} pushups`}
-                  secondary={`Date: ${result.date}`}
-                />
-              </ListItem>
-            ))}
-          </List>
+          <Button onClick={() => { setDisplayGraph(!displayGraph)}}>
+            {displayGraph ? 'Hide Graph' : 'Show Graph'}
+          </Button>
+          {displayGraph ? (
+            results.length > 0 && results.every((result) => !isNaN(result.result) && result.date) ? (
+              <LineChart
+                xAxis={[{ 
+                  data: results.map((result) => new Date(result.date).getTime()),
+                  valueFormatter: (value) => new Date(value).toLocaleDateString()
+                }]}
+                series={[
+                  {
+                    data: results.map((result) => Number(result.result)),
+                  },
+                ]}
+                height={300}
+              />
+            ) : (
+              <Typography variant="body1" color="error.main">
+                No valid data available to display the graph.
+              </Typography>
+            )
+          ) : (
+            <List
+              sx={{
+                width: '100%',
+                maxWidth: 360,
+                bgcolor: 'background.paper',
+                borderRadius: 2,
+                boxShadow: 1,
+              }}
+            >
+              {results.map((result, index) => (
+                <ListItem key={index} divider>
+                  <ListItemText
+                    primary={`${result.result} pushups`}
+                    secondary={`Date: ${result.date}`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          )}
         </Box>
       )}
     </Box>
