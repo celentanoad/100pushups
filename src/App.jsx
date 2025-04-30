@@ -44,6 +44,7 @@ function App() {
   }
 
   return (
+    <>
     <Box
       sx={{
         display: 'flex',
@@ -71,98 +72,96 @@ function App() {
               localStorage.clear();
               setCompleted(null);
             } else {
-              return
+              return;
             }
-          }}
+          } }
         >
           Reset Progress
         </Button>
       </Box>
-      { view === 'home' ? (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          textAlign: 'center',
-          padding: theme.spacing(4),
-          backgroundColor: theme.palette.background.paper,
-          color: theme.palette.text.primary,
-          borderRadius: theme.shape.borderRadius,
-          boxShadow: theme.shadows[3],
-        }}
-      >
-        
-        <Typography variant="h4" gutterBottom>
-          100 Pushups Challenge
-        </Typography>
-        <Box sx={{ marginBottom: theme.spacing(2) }}>
-          <Typography variant="body1">
-            Last test result: {JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.result || 'No results yet'}
-          </Typography>
-          { 
-            ['week2', 'week4', 'week5'].includes(completed?.[completed.length - 1]?.week) && 
-            completed?.[completed.length - 1]?.day === 'day3' &&
-            completed?.[completed.length - 1]?.date >= JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.date
-            &&
-            <Typography variant="body1">
-              Time to retake the endurance test!
-            </Typography>
-          }
-          <Button variant="contained" size="small" color="primary" sx={{ marginTop: theme.spacing(1) }} onClick={() => setView('test')}>
-            Endurance Test
-          </Button>
-        </Box>
-        <Typography variant="body1">
-          Last completed: {completed ? getLastCompleted() : 'No sets completed yet'}
-        </Typography>
+      {view === 'home' ? (
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center',
-            gap: theme.spacing(2),
-            flexWrap: 'wrap',
-            marginTop: theme.spacing(2),
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            padding: theme.spacing(4),
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
+            borderRadius: theme.shape.borderRadius,
+            boxShadow: theme.shadows[3],
           }}
         >
-          {['week1', 'week2', 'week3', 'week4', 'week5', 'week6'].map((weekName) => (
-            <Button
-              key={weekName}
-              variant="contained"
-              color={isWeekCompleted(weekName) ? "success" : week === weekName ? 'secondary' : 'primary'}
-              onClick={() => setWeek(weekName)}
-            >
-              {weekName.replace('week', 'Week ') + (isWeekCompleted(weekName) ? ' (Completed)' : '')}
-            </Button>
-          ))}
-        </Box>
-        {week && (
-          <Box sx={{ marginTop: theme.spacing(4) }}>
-            <TableByWeek week={week} />
-          </Box>
-        )}
-      </Box>
-         ) : (
-          <>
-            <EnduranceTest />
-            <Button onClick={() => setView('home')}>
-              Back to Home
-            </Button>
-          </>
-         ) 
-      }
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: theme.spacing(2),
-          left: theme.spacing(2),
-        }}
-        >
-          <Typography variant="body2" color="text.secondary">
-            Visit <Link src="https://hundredpushups.com/">https://hundredpushups.com/</Link> for more info - all charts and data are from there.
+
+          <Typography variant="h4" gutterBottom>
+            100 Pushups Challenge
           </Typography>
+          <Box sx={{ marginBottom: theme.spacing(2) }}>
+            <Typography variant="body1">
+              Last test result: {JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.result || 'No results yet'}
+            </Typography>
+            {['week2', 'week4', 'week5'].includes(completed?.[completed.length - 1]?.week) &&
+              completed?.[completed.length - 1]?.day === 'day3' &&
+              completed?.[completed.length - 1]?.date >= JSON.parse(localStorage.getItem('results'))?.slice(-1)?.[0]?.date
+              &&
+              <Typography variant="body1">
+                Time to retake the endurance test!
+              </Typography>}
+            <Button variant="contained" size="small" color="primary" sx={{ marginTop: theme.spacing(1) }} onClick={() => setView('test')}>
+              Endurance Test
+            </Button>
+          </Box>
+          <Typography variant="body1">
+            Last completed: {completed ? getLastCompleted() : 'No sets completed yet'}
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: theme.spacing(2),
+              flexWrap: 'wrap',
+              marginTop: theme.spacing(2),
+            }}
+          >
+            {['week1', 'week2', 'week3', 'week4', 'week5', 'week6'].map((weekName) => (
+              <Button
+                key={weekName}
+                variant="contained"
+                color={isWeekCompleted(weekName) ? "success" : week === weekName ? 'secondary' : 'primary'}
+                onClick={() => setWeek(weekName)}
+              >
+                {weekName.replace('week', 'Week ') + (isWeekCompleted(weekName) ? ' (Completed)' : '')}
+              </Button>
+            ))}
+          </Box>
+          {week && (
+            <Box sx={{ marginTop: theme.spacing(4) }}>
+              <TableByWeek week={week} />
+            </Box>
+          )}
         </Box>
+      ) : (
+        <>
+          <EnduranceTest />
+          <Button onClick={() => setView('home')}>
+            Back to Home
+          </Button>
+        </>
+      )}
     </Box>
+    <Box
+      sx={{
+        position: 'absolute',
+        bottom: theme.spacing(2),
+        left: theme.spacing(2),
+      }}
+    >
+      <Typography variant="body2" color="text.secondary">
+        Visit <Link src="https://hundredpushups.com/">https://hundredpushups.com/</Link> for more info - all charts and data are from there.
+      </Typography>
+    </Box>
+    </>
   );
 }
 
